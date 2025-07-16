@@ -197,14 +197,20 @@ def tensor_network_apply_op_vec(
     if contract:
         # optionally contract all tensor at each site
         for site in sites_present_in_A:
-            x ^= site
+            if isinstance(site,int):
+                x ^= [x._site_tag_id.format(site),]
+            else:
+                x ^= site
 
         if fuse_multibonds:
             x.fuse_multibonds_()
 
     # optionally compress
     if compress:
-        x.compress(**compress_opts)
+        try:
+            x.compress(**compress_opts)
+        except:
+            x.compress_all(**compress_opts)
 
     return x
 
@@ -305,13 +311,19 @@ def tensor_network_apply_op_op(
     if contract:
         # optionally contract all tensor at each site
         for site in B.gen_sites_present():
-            B ^= site
+            if isinstance(site,int):
+                B ^= [B._site_tag_id.format(site),]
+            else:
+                B ^= site
 
         if fuse_multibonds:
             B.fuse_multibonds_()
 
     if compress:
-        B.compress(**compress_opts)
+        try:
+            B.compress(**compress_opts)
+        except:
+            B.compress_all(**compress_opts)
 
     return B
 
