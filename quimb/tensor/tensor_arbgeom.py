@@ -626,7 +626,7 @@ class TensorNetworkGen(TensorNetwork):
 
         """
         return (
-            self.site_tag_id(site)
+            self.site_tag_id.format(site)
             for site in self.gen_site_coos()
             if self.site_tag(site) in self.tag_map
         )
