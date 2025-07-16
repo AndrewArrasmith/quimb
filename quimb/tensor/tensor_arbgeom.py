@@ -197,7 +197,10 @@ def tensor_network_apply_op_vec(
     if contract:
         # optionally contract all tensor at each site
         for site in sites_present_in_A:
-            x ^= site
+            if isinstance(site,int):
+                x ^= [x._site_tag_id.format(site),]
+            else:
+                x ^= site
 
         if fuse_multibonds:
             x.fuse_multibonds_()
@@ -305,7 +308,10 @@ def tensor_network_apply_op_op(
     if contract:
         # optionally contract all tensor at each site
         for site in B.gen_sites_present():
-            B ^= site
+            if isinstance(site,int):
+                B ^= [B._site_tag_id.format(site),]
+            else:
+                B ^= site
 
         if fuse_multibonds:
             B.fuse_multibonds_()
@@ -626,7 +632,7 @@ class TensorNetworkGen(TensorNetwork):
 
         """
         return (
-            self.site_tag_id.format(site)
+            site
             for site in self.gen_site_coos()
             if self.site_tag(site) in self.tag_map
         )
