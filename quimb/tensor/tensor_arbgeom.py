@@ -207,7 +207,10 @@ def tensor_network_apply_op_vec(
 
     # optionally compress
     if compress:
-        x.compress_all(**compress_opts)
+        try:
+            x.compress(**compress_opts)
+        except:
+            x.compress_all(**compress_opts)
 
     return x
 
@@ -317,7 +320,10 @@ def tensor_network_apply_op_op(
             B.fuse_multibonds_()
 
     if compress:
-        B.compress_all(**compress_opts)
+        try:
+            B.compress(**compress_opts)
+        except:
+            B.compress_all(**compress_opts)
 
     return B
 
